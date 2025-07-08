@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowDownToLine, Cctv, Users, WifiOff } from "lucide-react";
+import { ArrowDownToLine, Cctv, Clock2, Users, WifiOff } from "lucide-react";
 import HourlyPeopleChart from "./HourlyPeopleChart";
 import { formatNumber } from "@/lib/utils";
 import {
@@ -14,6 +14,7 @@ import Loader from "@/components/loader";
 
 export default function Home() {
   const [data, setData] = useState<any>(null);
+  const [totalCount, setTotalCount] = useState<any>(0);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/live_count`, {
@@ -38,6 +39,29 @@ export default function Home() {
       .catch((err) => {
         console.log(err);
       });
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/total_in_count`, {
+      headers: {
+        "ngrok-skip-browser-warning": "1",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((json) => {
+        if (json.status === "success" && json.total_in) {
+          setTotalCount(json.total_in);
+        } else {
+          console.log("server error");
+          console.log(json);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   if (!data)
@@ -51,7 +75,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-100">
       <header className="flex justify-center items-center p-4 pt-6">
         <img src="./cms-logo-horiz.png" alt="CMS" className="h-8 w-auto mr-3" />
-        <h1 className="text-xl font-semibold">Smart Surveillance</h1>
+        <h1 className="text-xl font-semibold">Simhachalam Temple</h1>
       </header>
 
       <main className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6">
@@ -79,7 +103,7 @@ export default function Home() {
             <StatusCard isOnline={data?.camera_status === "online"} />
             <StatsCard
               icon={<ArrowDownToLine className="w-5" />}
-              title="People In"
+              title="Live Count"
               value={data?.in}
             />
             {/* <StatsCard
@@ -87,13 +111,16 @@ export default function Home() {
               title="People Out"
               value="0"
             /> */}
-            <div className="col-span-2">
-              <StatsCard
-                icon={<Users className="w-5" />}
-                title="Current Time"
-                value={data?.time}
-              />
-            </div>
+            <StatsCard
+              icon={<Clock2 className="w-5" />}
+              title="Current Time"
+              value={data?.time}
+            />
+            <StatsCard
+              icon={<Users className="w-5" />}
+              title="Total Devotees"
+              value={totalCount}
+            />
           </div>
           <HourlyPeopleChart />
         </div>

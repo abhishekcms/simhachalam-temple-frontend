@@ -80,6 +80,7 @@ const HourlyPeopleChart = () => {
 
   const options: any = {
     responsive: true,
+    maintainAspectRatio: false,
     interaction: {
       mode: "index",
       intersect: false,

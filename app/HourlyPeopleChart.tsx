@@ -116,7 +116,7 @@ const HourlyPeopleChart = () => {
     <Card className="shadow-none py-4">
       <CardContent className="h-full text-left space-y-4">
         <div className="w-full max-w-4xl mx-auto">
-          <Line data={chartData} options={options} />
+          <Line data={chartData} options={options} className="h-[250px]" />
         </div>
       </CardContent>
     </Card>

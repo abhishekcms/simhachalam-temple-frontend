@@ -2,7 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowDownToLine, ArrowUpToLine, Cctv, Users } from "lucide-react";
+import {
+  ArrowDownToLine,
+  ArrowUpToLine,
+  Cctv,
+  SwitchCamera,
+  Users,
+  WifiOff,
+} from "lucide-react";
 import HourlyPeopleChart from "./HourlyPeopleChart";
 import { formatNumber } from "@/lib/utils";
 import {
@@ -10,26 +17,43 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Loader from "@/components/loader";
 
 export default function Home() {
+  const [data, setData] = useState<any>(null);
+
   useEffect(() => {
-    fetch(process.env.API_URL)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/live_count`, {
+      headers: {
+        "ngrok-skip-browser-warning": "1",
+      },
+    })
       .then((res) => {
         if (!res.ok) {
           throw new Error("Network response was not ok");
         }
-        return res.json(); // parse JSON
+        return res.json();
       })
       .then((json) => {
-        setData(json); // set data
-        setLoading(false);
+        if (json.status === "success" && json.data) {
+          setData(json.data);
+        } else {
+          console.log("server error");
+          console.log(json);
+        }
       })
       .catch((err) => {
-        setError(err.message); // set error
-        setLoading(false);
+        console.log(err);
       });
   }, []);
+
+  if (!data)
+    return (
+      <div className="flex justfy-center items-center p-6">
+        <Loader />
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -40,35 +64,44 @@ export default function Home() {
 
       <main className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6">
         <div className="col-span-7">
-          <Card className="h-[500px] shadow-none p-0">
+          <Card className="h-[650px] shadow-none p-0">
             <CardContent className="flex items-center justify-center h-full p-0">
-              <img
-                src={process.env.NEXT_PUBLIC_FEED_URL}
-                alt="Camera Stream"
-                className="rounded-lg w-full h-full object-cover"
-              />
+              {data?.camera_status === "online" ? (
+                <img
+                  src={process.env.NEXT_PUBLIC_FEED_URL}
+                  alt="Camera Stream"
+                  className="rounded-lg w-full h-full object-contain"
+                />
+              ) : (
+                <div className="flex flex-col items-center space-y-2">
+                  <WifiOff className="w-10 text-gray-600" />
+                  <div className="text-gray-600">Internet or power failure</div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
 
         <div className="col-span-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <StatusCard isOnline={data?.camera_status === "online"} />
             <StatsCard
               icon={<ArrowDownToLine className="w-5" />}
               title="People In"
-              value={25050}
+              value={data?.in}
             />
-            <StatsCard
+            {/* <StatsCard
               icon={<ArrowUpToLine className="w-5" />}
               title="People Out"
-              value="100"
-            />
-            <StatsCard
-              icon={<Users className="w-5" />}
-              title="Current Occupancy"
-              value="100"
-            />
-            <StatusCard isOnline />
+              value="0"
+            /> */}
+            <div className="col-span-2">
+              <StatsCard
+                icon={<Users className="w-5" />}
+                title="Current Time"
+                value={data?.time}
+              />
+            </div>
           </div>
           <HourlyPeopleChart />
         </div>
@@ -121,7 +154,11 @@ function StatsCard({ icon, title, value }: any) {
         <div>
           <Tooltip>
             <TooltipTrigger asChild>
-              <h2 className="text-3xl font-bold">{formatNumber(value)}</h2>
+              {title === "Current Time" ? (
+                <h2 className="text-2xl font-bold">{value}</h2>
+              ) : (
+                <h2 className="text-3xl font-bold">{formatNumber(value)}</h2>
+              )}
             </TooltipTrigger>
             <TooltipContent>{value}</TooltipContent>
           </Tooltip>

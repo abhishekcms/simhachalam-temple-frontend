@@ -1,47 +1,84 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
-  BarElement,
   CategoryScale,
   LinearScale,
+  PointElement,
+  LineElement,
+  Title,
   Tooltip,
   Legend,
+  Filler,
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import { Card, CardContent } from "@/components/ui/card";
+import Loader from "@/components/loader";
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 const HourlyPeopleChart = () => {
-  const data = {
-    labels: ["8 AM", "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM"],
+  const [data, setData] = useState<any>(null);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/hourly_in_count`, {
+      headers: {
+        "ngrok-skip-browser-warning": "1",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((json) => {
+        if (json.status === "success" && json.hourly_in) {
+          setData(json.hourly_in);
+        } else {
+          console.log("server error");
+          console.log(json);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  if (!data)
+    return (
+      <div className="flex justfy-center items-center p-6">
+        <Loader />
+      </div>
+    );
+
+  const chartData = {
+    labels: Object.keys(data),
     datasets: [
       {
-        label: "In",
-        data: [5, 8, 10, 12, 9, 7, 6],
-        backgroundColor: "#2563eb",
-        borderRadius: {
-          topLeft: 5,
-          topRight: 5,
-        },
-        barThickness: 20,
-      },
-      {
-        label: "Out",
-        data: [2, 3, 5, 6, 4, 3, 2],
-        backgroundColor: "#93c5fd",
-        borderRadius: {
-          topLeft: 5,
-          topRight: 5,
-        },
-        barThickness: 20,
+        label: "People In",
+        data: Object.values(data),
+        borderColor: "#2563eb",
+        backgroundColor: "rgba(37, 99, 235, 0.2)",
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4,
+        pointBackgroundColor: "#2563eb",
       },
     ],
   };
 
-  const options = {
+  const options: any = {
     responsive: true,
     interaction: {
       mode: "index",
@@ -54,7 +91,6 @@ const HourlyPeopleChart = () => {
           boxWidth: 12,
           boxHeight: 12,
           padding: 10,
-          usePointStyle: false,
         },
       },
     },
@@ -80,7 +116,7 @@ const HourlyPeopleChart = () => {
     <Card className="shadow-none py-4">
       <CardContent className="h-full text-left space-y-4">
         <div className="w-full max-w-4xl mx-auto">
-          <Bar data={data} options={options} />
+          <Line data={chartData} options={options} />
         </div>
       </CardContent>
     </Card>

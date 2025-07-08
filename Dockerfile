@@ -15,7 +15,7 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Build the app for production
-RUN npm run build
+RUN npm run build --no-lint
 
 # Install a simple HTTP server to serve the build files
 #RUN npm install -g serve

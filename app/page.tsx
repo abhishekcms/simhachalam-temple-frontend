@@ -1,15 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  ArrowDownToLine,
-  ArrowUpToLine,
-  Cctv,
-  SwitchCamera,
-  Users,
-  WifiOff,
-} from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowDownToLine, Cctv, Users, WifiOff } from "lucide-react";
 import HourlyPeopleChart from "./HourlyPeopleChart";
 import { formatNumber } from "@/lib/utils";
 import {

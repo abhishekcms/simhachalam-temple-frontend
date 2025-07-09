@@ -15,6 +15,7 @@ import Loader from "@/components/loader";
 export default function Home() {
   const [data, setData] = useState<any>(null);
   const [totalCount, setTotalCount] = useState<any>(0);
+  const [error, setError] = useState<any>(null);
 
   const fetchLiveCount = () => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/live_count`, {
@@ -32,11 +33,13 @@ export default function Home() {
         if (json.status === "success" && json.data) {
           setData(json.data);
         } else {
+          setError("Invalid response format");
           console.log("server error");
           console.log(json);
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
+        setError("Server Error: " + err.message);
         console.log(err);
       });
   };
@@ -68,19 +71,26 @@ export default function Home() {
 
   useEffect(() => {
     fetchLiveCount();
-    const interval = setInterval(fetchLiveCount, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    if (!error) {
+      const interval = setInterval(fetchLiveCount, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [error]);
 
   useEffect(() => {
     fetchTotalCount();
-    const interval = setInterval(fetchTotalCount, 30000);
-    return () => clearInterval(interval);
-  }, []);
+    if (!error) {
+      const interval = setInterval(fetchTotalCount, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [error]);
+
+  if (error)
+    return <div className="flex justify-center items-center p-6">{error}</div>;
 
   if (!data)
     return (
-      <div className="flex justfy-center items-center p-6">
+      <div className="flex justify-center items-center p-6">
         <Loader />
       </div>
     );

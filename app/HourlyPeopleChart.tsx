@@ -15,6 +15,9 @@ import {
 import { Line } from "react-chartjs-2";
 import { Card, CardContent } from "@/components/ui/card";
 import Loader from "@/components/loader";
+import axios from "axios";
+import { timestamp } from "@/lib/utils";
+import { Download } from "lucide-react";
 
 ChartJS.register(
   CategoryScale,
@@ -29,6 +32,7 @@ ChartJS.register(
 
 const HourlyPeopleChart = () => {
   const [data, setData] = useState<any>(null);
+  const [isDownloading, setIsDownloading] = useState<any>(false);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/hourly_in_count`, {
@@ -61,6 +65,40 @@ const HourlyPeopleChart = () => {
         <Loader />
       </div>
     );
+
+  const handleDownloadReport = async () => {
+    try {
+      setIsDownloading(true);
+
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/download_hourly_csv`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const contentDisposition = response.headers["content-disposition"];
+      const filename = contentDisposition
+        ? contentDisposition.split("filename=")[1]
+        : `Report of Devotee Crowd at Varaha Lakshmi Narasimha Temple ${timestamp()}.csv`;
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename.replace(/['"]/g, "");
+      a.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Error downloading the report:", err);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const chartData = {
     labels: Object.keys(data),
@@ -116,6 +154,14 @@ const HourlyPeopleChart = () => {
   return (
     <Card className="shadow-none py-4">
       <CardContent className="h-full text-left space-y-4">
+        <div className="flex justify-end">
+          <button
+            className="absolute p-2 cursor-pointer"
+            onClick={handleDownloadReport}
+          >
+            <Download className="w-4" />
+          </button>
+        </div>
         <div className="w-full max-w-4xl mx-auto">
           <Line data={chartData} options={options} className="h-[250px]" />
         </div>

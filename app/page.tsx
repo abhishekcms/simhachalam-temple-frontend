@@ -87,14 +87,17 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <header className="flex justify-center items-center p-4 pt-6">
-        <img src="./cms-logo-horiz.png" alt="CMS" className="h-8 w-auto mr-3" />
-        <h1 className="text-xl font-semibold">Simhachalam Temple</h1>
+      <header className="flex justify-center items-center gap-4 p-2">
+        <img src="./logo2.png" alt="" className="h-12 w-auto" />
+        <h1 className="text-xl font-semibold">
+          Greater Vishakhapatnam Municipal Corporation
+        </h1>
+        <img src="./temple.jpg" alt="" className="h-12 w-auto" />
       </header>
 
       <main className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6">
         <div className="col-span-7">
-          <Card className="h-[650px] shadow-none p-0">
+          <Card className="h-full shadow-none p-0">
             <CardContent className="flex items-center justify-center h-full p-0">
               {data?.camera_status === "online" ? (
                 <img
@@ -139,6 +142,11 @@ export default function Home() {
           <HourlyPeopleChart />
         </div>
       </main>
+
+      <footer className="flex justify-center items-center gap-4 pt-1 pb-4">
+        <img src="./cms-logo-horiz.png" alt="CMS" className="h-6 w-auto" />
+        <div className="text-sm text-gray-600">Powered by CMS</div>
+      </footer>
     </div>
   );
 }

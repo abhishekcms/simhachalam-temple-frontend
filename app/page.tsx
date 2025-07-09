@@ -100,7 +100,7 @@ export default function Home() {
       <header className="flex justify-center items-center gap-4 p-2">
         <img src="./logo2.png" alt="" className="h-16 w-auto" />
         <h1 className="text-xl font-semibold">
-          Greater Vishakhapatnam Municipal Corporation
+          Greater Visakhapatnam Municipal Corporation
         </h1>
         <img
           src="./temple.jpg"

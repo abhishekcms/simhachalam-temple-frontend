@@ -98,22 +98,30 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="flex justify-center items-center gap-4 p-2">
-        <img src="./logo2.png" alt="" className="h-12 w-auto" />
+        <img src="./logo2.png" alt="" className="h-16 w-auto" />
         <h1 className="text-xl font-semibold">
           Greater Vishakhapatnam Municipal Corporation
         </h1>
-        <img src="./temple.jpg" alt="" className="h-12 w-auto" />
+        <img
+          src="./temple.jpg"
+          alt=""
+          className="h-16 w-16 rounded-full object-cover"
+        />
       </header>
 
       <main className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6">
         <div className="col-span-7">
           <Card className="h-full shadow-none p-0">
-            <CardContent className="flex items-center justify-center h-full p-0">
+            <CardContent className="flex flex-col items-center justify-center h-full p-0">
+              <div className="px-2 mb-4 text-center text-lg font-medium">
+                Devotee Crowd Detection at Varaha Lakshmi Narasimha temple,
+                Simhachalam, Giripradakshina
+              </div>
               {data?.camera_status === "online" ? (
                 <img
                   src={process.env.NEXT_PUBLIC_FEED_URL}
                   alt="Camera Stream"
-                  className="rounded-lg w-full h-full object-contain"
+                  className="w-full object-contain"
                 />
               ) : (
                 <div className="flex flex-col items-center space-y-2">

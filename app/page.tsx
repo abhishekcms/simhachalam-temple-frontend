@@ -16,7 +16,7 @@ export default function Home() {
   const [data, setData] = useState<any>(null);
   const [totalCount, setTotalCount] = useState<any>(0);
 
-  useEffect(() => {
+  const fetchLiveCount = () => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/live_count`, {
       headers: {
         "ngrok-skip-browser-warning": "1",
@@ -39,7 +39,9 @@ export default function Home() {
       .catch((err) => {
         console.log(err);
       });
+  };
 
+  const fetchTotalCount = () => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/total_in_count`, {
       headers: {
         "ngrok-skip-browser-warning": "1",
@@ -62,6 +64,18 @@ export default function Home() {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  useEffect(() => {
+    fetchLiveCount();
+    const interval = setInterval(fetchLiveCount, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    fetchTotalCount();
+    const interval = setInterval(fetchTotalCount, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   if (!data)

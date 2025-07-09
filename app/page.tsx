@@ -96,7 +96,7 @@ export default function Home() {
     );
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-[#ffedb7]">
       <header className="flex justify-center items-center gap-4 p-2">
         <img src="./logo2.png" alt="" className="h-16 w-auto" />
         <h1 className="text-xl font-semibold">
@@ -113,7 +113,7 @@ export default function Home() {
         <div className="col-span-7">
           <Card className="h-full shadow-none p-0">
             <CardContent className="flex flex-col items-center justify-center h-full p-0">
-              <div className="px-2 mb-4 text-center text-lg font-medium">
+              <div className="px-2 mb-4 text-center text-lg font-bold">
                 Devotee Crowd Detection at Varaha Lakshmi Narasimha temple,
                 Simhachalam, Giripradakshina
               </div>

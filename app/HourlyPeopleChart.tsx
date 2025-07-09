@@ -68,7 +68,7 @@ const HourlyPeopleChart = () => {
       {
         label: "People In",
         data: Object.values(data),
-        borderColor: "#2563eb",
+        borderColor: "#2884BD", // "#2563eb",
         backgroundColor: "rgba(37, 99, 235, 0.2)",
         tension: 0.4,
         fill: true,

@@ -13,7 +13,12 @@ import { useEffect, useState } from "react";
 import Loader from "@/components/loader";
 
 export default function Home() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<any>({
+    camera_status: "offline",
+    in: 0,
+    live_count: 0,
+    out: 0,
+  });
   const [totalCount, setTotalCount] = useState<any>(0);
   const [error, setError] = useState<any>(null);
 
@@ -85,28 +90,28 @@ export default function Home() {
     }
   }, [error]);
 
-  if (error)
-    return <div className="flex justify-center items-center p-6">{error}</div>;
+  // if (error)
+  //   return <div className="flex justify-center items-center p-6">{error}</div>;
 
-  if (!data)
-    return (
-      <div className="flex justify-center items-center p-6">
-        <Loader />
-      </div>
-    );
+  // if (!data)
+  //   return (
+  //     <div className="flex justify-center items-center p-6">
+  //       <Loader />
+  //     </div>
+  //   );
 
   return (
-    <div className="min-h-screen bg-[#ffedb7]">
+    <div className="min-h-screen bg-gray-100">
       <header className="flex justify-center items-center gap-4 p-2">
-        <img src="./logo2.png" alt="" className="h-16 w-auto" />
+        <img src="./logo.jpg" alt="" className="h-16 w-auto" />
         <h1 className="text-xl font-semibold">
-          Greater Visakhapatnam Municipal Corporation
+          Vadodara Municipal Corporation
         </h1>
-        <img
+        {/* <img
           src="./temple.jpg"
           alt=""
           className="h-16 w-16 rounded-full object-cover"
-        />
+        /> */}
       </header>
 
       <main className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6">
@@ -114,8 +119,7 @@ export default function Home() {
           <Card className="h-full shadow-none p-0">
             <CardContent className="flex flex-col items-center justify-center h-full p-0">
               <div className="px-2 mb-4 text-center text-lg font-bold">
-                Devotee Crowd Detection at Varaha Lakshmi Narasimha temple,
-                Simhachalam, Giripradakshina
+                Devotee Crowd Detection at Vadodara Municipal Corporation
               </div>
               {data?.camera_status === "online" ? (
                 <img
@@ -139,7 +143,7 @@ export default function Home() {
             <StatsCard
               icon={<ArrowDownToLine className="w-5" />}
               title="Live Count"
-              value={data?.in}
+              value={data?.live_count}
             />
             {/* <StatsCard
               icon={<ArrowUpToLine className="w-5" />}
@@ -148,13 +152,13 @@ export default function Home() {
             /> */}
             <StatsCard
               icon={<Clock2 className="w-5" />}
-              title="Current Time"
-              value={data?.time}
+              title="People In"
+              value={data?.in}
             />
             <StatsCard
               icon={<Users className="w-5" />}
-              title="Total Devotees"
-              value={totalCount}
+              title="People Out"
+              value={data?.out}
             />
           </div>
           <HourlyPeopleChart />

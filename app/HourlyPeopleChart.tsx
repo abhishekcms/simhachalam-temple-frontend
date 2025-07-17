@@ -31,40 +31,46 @@ ChartJS.register(
 );
 
 const HourlyPeopleChart = () => {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<any>({
+    MAR: 68,
+    APR: 23,
+    MAY: 89,
+    JUN: 78,
+    JUL: 57,
+  });
   const [isDownloading, setIsDownloading] = useState<any>(false);
 
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/hourly_in_count`, {
-      headers: {
-        "ngrok-skip-browser-warning": "1",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return res.json();
-      })
-      .then((json) => {
-        if (json.status === "success" && json.hourly_in) {
-          setData(json.hourly_in);
-        } else {
-          console.log("server error");
-          console.log(json);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`${process.env.NEXT_PUBLIC_API_URL}/hourly_in_count`, {
+  //     headers: {
+  //       "ngrok-skip-browser-warning": "1",
+  //     },
+  //   })
+  //     .then((res) => {
+  //       if (!res.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       return res.json();
+  //     })
+  //     .then((json) => {
+  //       if (json.status === "success" && json.hourly_in) {
+  //         setData(json.hourly_in);
+  //       } else {
+  //         console.log("server error");
+  //         console.log(json);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
 
-  if (!data)
-    return (
-      <div className="flex justfy-center items-center p-6">
-        <Loader />
-      </div>
-    );
+  // if (!data)
+  //   return (
+  //     <div className="flex justfy-center items-center p-6">
+  //       <Loader />
+  //     </div>
+  //   );
 
   const handleDownloadReport = async () => {
     try {

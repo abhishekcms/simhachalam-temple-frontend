@@ -13,12 +13,13 @@ import { useEffect, useState } from "react";
 import Loader from "@/components/loader";
 
 export default function Home() {
-  const [data, setData] = useState<any>({
-    camera_status: "offline",
-    in: 0,
-    live_count: 0,
-    out: 0,
-  });
+  const [data, setData] = useState<any>();
+  // {
+  //   camera_status: "offline",
+  //   in: 0,
+  //   live_count: 0,
+  //   out: 0,
+  // }
   const [totalCount, setTotalCount] = useState<any>(0);
   const [error, setError] = useState<any>(null);
 
@@ -90,15 +91,15 @@ export default function Home() {
     }
   }, [error]);
 
-  // if (error)
-  //   return <div className="flex justify-center items-center p-6">{error}</div>;
+  if (error)
+    return <div className="flex justify-center items-center p-6">{error}</div>;
 
-  // if (!data)
-  //   return (
-  //     <div className="flex justify-center items-center p-6">
-  //       <Loader />
-  //     </div>
-  //   );
+  if (!data)
+    return (
+      <div className="flex justify-center items-center p-6">
+        <Loader />
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -123,7 +124,7 @@ export default function Home() {
               </div>
               {data?.camera_status === "online" ? (
                 <img
-                  src={process.env.NEXT_PUBLIC_FEED_URL}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/video_feed`}
                   alt="Camera Stream"
                   className="w-full object-contain"
                 />
